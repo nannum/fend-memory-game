@@ -1,6 +1,6 @@
 /**
  * @namespace document
- * 
+ *
  * Click Event
  * @event document#click
  * @type {object}
@@ -40,7 +40,9 @@ const cards = [
   'bomb',
   'bomb'
 ];
+const selectedCards = [];
 const gameBoard = document.body.querySelector('.deck');
+
 gameBoard.addEventListener('click', clickHandler);
 
 /**
@@ -64,16 +66,40 @@ function addItems(element, array) {
 }
 
 /**
-* @description Click event handler 
+* @description Click event handler
 * @param {document#event:click} event
 * @listens document#click
 */
 function clickHandler(event) {
-  if (event.target.nodeName === 'LI' ) {
-    toggleClass(event.target, 'open', 'show');
-  }
-  if (event.target.nodeName === 'I' ) {
-    toggleClass(event.target.parentNode, 'open', 'show');
+  if (event.target.classList.contains('card') && !event.target.classList.contains('match') && !event.target.classList.contains('open')) {
+    if (!selectedCards.length) {
+      selectedCards.push(event.target);
+      toggleClass(selectedCards[0], 'open', 'show');
+    }
+
+    else {
+      selectedCards.push(event.target);
+
+      if (selectedCards[0].firstChild.className === selectedCards[1].firstChild.className) {
+        toggleClass(selectedCards[1], 'open', 'show');
+        toggleClass(selectedCards[0], 'match', 'rubberBand', 'animated');
+        toggleClass(selectedCards[1], 'match', 'rubberBand', 'animated');
+        window.setTimeout(toggleClass, 450, selectedCards[0], 'rubberBand', 'animated');
+        window.setTimeout(toggleClass, 450, selectedCards[1], 'rubberBand', 'animated');
+      }
+
+      else {
+        toggleClass(selectedCards[1], 'open', 'show');
+        toggleClass(selectedCards[0], 'no-match', 'wobble', 'animated');
+        toggleClass(selectedCards[1], 'no-match', 'wobble', 'animated');
+        window.setTimeout(toggleClass, 450, selectedCards[0], 'wobble', 'animated');
+        window.setTimeout(toggleClass, 450, selectedCards[1], 'wobble', 'animated');
+        window.setTimeout(toggleClass, 900, selectedCards[0], 'no-match', 'open', 'show');
+        window.setTimeout(toggleClass, 900, selectedCards[1], 'no-match', 'open', 'show');
+      }
+
+      selectedCards.length = 0;
+    }
   }
 }
 
@@ -88,5 +114,5 @@ function toggleClass(element, ...array) {
   });
 }
 
-shuffle(cards);
+//shuffle(cards);
 addItems(gameBoard, cards);

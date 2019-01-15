@@ -65,7 +65,7 @@ h1 {
   box-shadow: 5px 2px 20px 0 rgba(46, 61, 73, 0.5);
   transform: rotateY(180deg);
   transform-style: preserve-3d;
-  transition: 
+  transition:
     background-color .4s ease-in-out,
     transform .4s ease-in-out;
 }
@@ -83,6 +83,12 @@ h1 {
 .deck .card.match {
   cursor: default;
   background-color: #02ccba;
+  font-size: 33px;
+}
+
+.deck .card.no-match {
+  cursor: default;
+  background-color: #f85c3e;
   font-size: 33px;
 }
 
@@ -111,4 +117,78 @@ h1 {
 .score-panel .restart {
   float: right;
   cursor: pointer;
+}
+
+/* wobble and rubberband animations from https://daneden.github.io/animate.css/ */
+@keyframes wobble {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  15% {
+    transform: translate3d(-25%, 0, 0) rotate3d(0, 0, 1, -5deg);
+  }
+
+  30% {
+    transform: translate3d(20%, 0, 0) rotate3d(0, 0, 1, 3deg);
+  }
+
+  45% {
+    transform: translate3d(-15%, 0, 0) rotate3d(0, 0, 1, -3deg);
+  }
+
+  60% {
+    transform: translate3d(10%, 0, 0) rotate3d(0, 0, 1, 2deg);
+  }
+
+  75% {
+    transform: translate3d(-5%, 0, 0) rotate3d(0, 0, 1, -1deg);
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.wobble {
+  animation-name: wobble;
+}
+
+@keyframes rubberBand {
+  from {
+    transform: scale3d(1, 1, 1);
+  }
+
+  30% {
+    transform: scale3d(1.25, 0.75, 1);
+  }
+
+  40% {
+    transform: scale3d(0.75, 1.25, 1);
+  }
+
+  50% {
+    transform: scale3d(1.15, 0.85, 1);
+  }
+
+  65% {
+    transform: scale3d(0.95, 1.05, 1);
+  }
+
+  75% {
+    transform: scale3d(1.05, 0.95, 1);
+  }
+
+  to {
+    transform: scale3d(1, 1, 1);
+  }
+}
+
+.rubberBand {
+  animation-name: rubberBand;
+}
+
+.animated {
+  animation-duration: 1s;
+  animation-fill-mode: both;
 }
