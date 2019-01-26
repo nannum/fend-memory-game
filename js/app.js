@@ -7,11 +7,6 @@
  * @property {element} target
  */
 
-let clickCount = 0;
-let starLevel = 0;
-const deck = document.body.querySelector('.deck');
-const MAX_NUMBER_OF_CLICKS = 2;
-const selectedCards = [];
 const cards = [
   'diamond',
   'diamond',
@@ -30,7 +25,16 @@ const cards = [
   'bomb',
   'bomb'
 ];
-deck.addEventListener('click', clickHandler);
+const deck = document.body.querySelector('.deck');
+const stars = document.body.querySelector('.stars');
+const MAX_NUMBER_OF_CLICKS = 2;
+const MAX_NUMBER_OF_MATCHES = cards.length;
+const MAX_NUMBER_OF_STARS = stars.children.length;
+const selectedCards = [];
+let moveCount = 0;
+let starRating = MAX_NUMBER_OF_STARS;
+
+deck.addEventListener('click', cardClickHandler);
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
@@ -89,7 +93,19 @@ function isValidClick(event, maxNumberOfClicks, numberOfClicks) {
  */
 function isAMatch(cards) {
   return (
-    cards[0].firstChild.className === cards[1].firstChild.className
+    // cards[0].firstChild.className === cards[1].firstChild.className
+    cards[0].firstElementChild.className === cards[1].firstElementChild.className
+  );
+}
+
+/**
+ * @description Tests to see if the game is over
+ * @param {number} maxNumberOfClicks
+ */
+function isGameOver(maxNumberOfMatches) {
+  let matches = document.querySelectorAll('.match');
+  return (
+    matches.length === maxNumberOfMatches
   );
 }
 
@@ -124,14 +140,27 @@ function animateCards(cards, matchStatus, ...animationList) {
   flipCards(cards, ...classList);
   setTimeout(() => {
     flipCards(cards, ...animationList);
-  }, 650);
+  }, 550);
 
   setTimeout(() => {
     if (matchStatus == 'no-match') {
       flipCards(cards, 'no-match', 'open', 'show');
     }
     cards.length = 0;
-  }, 750);
+  }, 650);
+}
+
+/**
+ * @description Tests if the selected cards match
+ * @param {string[]} cards
+ */
+function removeStar(star, rating) {
+  if (star.parentNode.children.length > rating) {
+    flipCard(star, 'rotateOut', 'animated');
+    setTimeout(() => {
+        star.parentNode.removeChild(star);
+    }, 600);
+  }
 }
 
 /**
@@ -139,14 +168,34 @@ function animateCards(cards, matchStatus, ...animationList) {
  * @param {document#event:click} event
  * @listens document#click
  */
-function clickHandler(event) {
+function cardClickHandler(event) {
   if (isValidClick(event, MAX_NUMBER_OF_CLICKS, selectedCards.length)) {
     selectedCards.push(event.target);
     flipCard(event.target, 'open', 'show');
 
     if (selectedCards.length == MAX_NUMBER_OF_CLICKS) {
+      moveCount++;
+
+      if (moveCount > 11 && moveCount <= 16) {
+        starRating = 2;
+        removeStar(stars.lastElementChild, starRating);
+      }
+
+      if (moveCount > 16 && moveCount <= 20) {
+        starRating = 1;
+        removeStar(stars.lastElementChild, starRating);
+      }
+
+      if (moveCount > 20 && starRating > 0) {
+        starRating = 0;
+        removeStar(stars.lastElementChild, starRating);
+      }
+
       if (isAMatch(selectedCards)) {
         animateCards(selectedCards, 'match', 'rubberBand', 'animated');
+        if (isGameOver(MAX_NUMBER_OF_MATCHES)) {
+          gameOver();
+        }
       } else {
         animateCards(selectedCards, 'no-match', 'wobble', 'animated');
       }

@@ -119,7 +119,7 @@ h1 {
   cursor: pointer;
 }
 
-/* wobble and rubberband animations from https://daneden.github.io/animate.css/ */
+/* animations from https://daneden.github.io/animate.css/ */
 @keyframes wobble {
   from {
     transform: translate3d(0, 0, 0);
@@ -186,6 +186,27 @@ h1 {
 
 .rubberBand {
   animation-name: rubberBand;
+}
+
+@keyframes rotateOut {
+  from {
+    -webkit-transform-origin: center;
+    transform-origin: center;
+    opacity: 1;
+  }
+
+  to {
+    -webkit-transform-origin: center;
+    transform-origin: center;
+    -webkit-transform: rotate3d(0, 0, 1, 200deg);
+    transform: rotate3d(0, 0, 1, 200deg);
+    opacity: 0;
+  }
+}
+
+.rotateOut {
+  -webkit-animation-name: rotateOut;
+  animation-name: rotateOut;
 }
 
 .animated {
