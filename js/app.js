@@ -27,6 +27,7 @@ const cards = [
 ];
 const deck = document.body.querySelector('.deck');
 const stars = document.body.querySelector('.stars');
+const moves = document.body.querySelector('.moves');
 const MAX_NUMBER_OF_CLICKS = 2;
 const MAX_NUMBER_OF_MATCHES = cards.length;
 const MAX_NUMBER_OF_STARS = stars.children.length;
@@ -175,7 +176,7 @@ function cardClickHandler(event) {
 
     if (selectedCards.length == MAX_NUMBER_OF_CLICKS) {
       moveCount++;
-
+      moves.innerHTML = moveCount;
       if (moveCount > 11 && moveCount <= 16) {
         starRating = 2;
         removeStar(stars.lastElementChild, starRating);
