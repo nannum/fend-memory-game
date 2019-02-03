@@ -27,13 +27,13 @@ const cards = [
 ];
 const stars = document.body.querySelector('.stars');
 const moves = document.body.querySelector('.moves');
-
+const minutes = document.body.querySelector('.minutes');
+const seconds = document.body.querySelector('.seconds');
 const deck = document.body.querySelector('.deck');
 const MAX_NUMBER_OF_STARS = stars.children.length;
 const MAX_NUMBER_OF_MATCHES = cards.length;
 const MAX_NUMBER_OF_CLICKS = 2;
 const selectedCards = [];
-
 let moveCount = 0;
 let numberOfMoves = 0;
 let starRating = 0;
@@ -56,6 +56,29 @@ function shuffle(array) {
   }
 
   return array;
+}
+
+/**
+ * @description The game timer
+ * @param {element} secondsElement - The seconds DOM element
+ * @param {element} minutesElement - The minutes DOM element
+ */
+function gameTimer(secondsElement, minutesElement) {
+  let seconds = 0;
+  timer = setInterval(() => {
+    seconds ++;
+    secondsElement.innerHTML = seconds % 60 < 10 ? `0${seconds % 60}`: seconds % 60;
+    if (seconds % 60 == 0) {
+      minutesElement.innerHTML = parseInt(seconds / 60);
+    }
+  }, 1000);
+}
+
+/**
+ * @description Stops the timer
+ */
+function stopTimer() {
+  window.clearInterval(timer);
 }
 
 /**
@@ -82,6 +105,7 @@ function setGameBoard(cards) {
 /**
  * @description Tests if a click event target is valid
  * @param {document#event:click} target - The click event target
+ * @returns {boolean}
  */
 function isValidTarget(target) {
   return (
@@ -95,6 +119,7 @@ function isValidTarget(target) {
  * @description Tests if the number stored click events is valid
  * @param {number} numberOfClicks - The current number of click events recorded
  * @param {number} maxNumberOfClicks - The maximum number of click events allowed
+ * @returns {boolean}
  */
 function isValidNumberOfClicks(numberOfClicks, maxNumberOfClicks) {
   return numberOfClicks < maxNumberOfClicks;
@@ -103,6 +128,7 @@ function isValidNumberOfClicks(numberOfClicks, maxNumberOfClicks) {
 /**
  * @description Tests if 2 cards are a match
  * @param {element[]} cards - An array of 2 card elements
+ * @returns {boolean}
  */
 function isMatch(cards) {
   return cards[0].firstElementChild.className === cards[1].firstElementChild.className;
@@ -110,6 +136,7 @@ function isMatch(cards) {
 
 /**
  * @description Tests to see if the game is over
+ * @returns {boolean}
  */
 function isGameOver() {
   let matches = document.querySelectorAll('.match');
@@ -171,6 +198,7 @@ function animateMisMatch(cards) {
 /**
  * @description Returns the current star rating
  * @param {number} numberOfMoves - The current number of moves the user has made
+ * @returns {number} The current star rating
  */
 function getStarRating(numberOfMoves) {
   return (numberOfMoves <= 11) ? 3
@@ -181,8 +209,7 @@ function getStarRating(numberOfMoves) {
 
 /**
  * @description Removes stars from view
- * @param {element[]} stars - The star DOM element
- * @param {number} rating - The current star rating
+ * @param {element} stars - The star DOM element
  */
 function removeStar(stars, rating) {
   if (!stars.children[rating].classList.contains('rotateOut')) {
@@ -223,3 +250,5 @@ function cardClickHandler(event) {
 //shuffle(cards);
 deck.appendChild(setGameBoard(cards));
 deck.addEventListener('click', cardClickHandler);
+
+gameTimer(seconds, minutes);
