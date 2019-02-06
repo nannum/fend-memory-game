@@ -34,9 +34,9 @@ const MAX_NUMBER_OF_STARS = stars.children.length;
 const MAX_NUMBER_OF_MATCHES = cards.length;
 const MAX_NUMBER_OF_CLICKS = 2;
 const selectedCards = [];
-let moveCount = 0;
 let numberOfMoves = 0;
 let starRating = 0;
+let timerStatus = false;
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 /**
@@ -60,18 +60,28 @@ function shuffle(array) {
 
 /**
  * @description The game timer
- * @param {element} secondsElement - The seconds DOM element
- * @param {element} minutesElement - The minutes DOM element
+ * @returns {boolean}
  */
-function gameTimer(secondsElement, minutesElement) {
+function gameTimer() {
   let seconds = 0;
   timer = setInterval(() => {
     seconds ++;
-    secondsElement.innerHTML = seconds % 60 < 10 ? `0${seconds % 60}`: seconds % 60;
-    if (seconds % 60 == 0) {
-      minutesElement.innerHTML = parseInt(seconds / 60);
-    }
+    insertTime(seconds);
   }, 1000);
+  return true;
+}
+
+/**
+ * @description Adds the time to the DOM
+ * @param {number} seconds - The current number of seconds that have elapsed
+ */
+function insertTime(seconds) {
+  const minutesElement = document.body.querySelector('.minutes');
+  const secondsElement = document.body.querySelector('.seconds');
+  secondsElement.innerHTML = seconds % 60 < 10 ? `0${seconds % 60}`: seconds % 60;
+  if (seconds % 60 == 0) {
+    minutesElement.innerHTML = parseInt(seconds / 60);
+  }
 }
 
 /**
@@ -132,16 +142,6 @@ function isValidNumberOfClicks(numberOfClicks, maxNumberOfClicks) {
  */
 function isMatch(cards) {
   return cards[0].firstElementChild.className === cards[1].firstElementChild.className;
-}
-
-/**
- * @description Tests to see if the game is over
- * @returns {boolean}
- */
-function isGameOver() {
-  let matches = document.querySelectorAll('.match');
-  let cards = document.querySelectorAll('.card');
-  return matches.length === cards.length;
 }
 
 /**
@@ -218,12 +218,38 @@ function removeStar(stars, rating) {
 }
 
 /**
+ * @description Tests to see if the game is over
+ * @returns {boolean}
+ */
+function isGameOver() {
+  let matches = document.querySelectorAll('.match');
+  let cards = document.querySelectorAll('.card');
+  return matches.length === cards.length;
+}
+
+/**
+ * @description EndGame handler
+ */
+function gameOver() {
+  stopTimer();
+  //launchModal(starRating);
+  console.log("congrats bitch!");
+  console.log(`here's the numberOfMoves cunt: ${numberOfMoves}`);
+  console.log(`here's the starRating hoe: ${starRating}`);
+  console.log(`here's the time bitch: ${minutes.innerHTML}:${seconds.innerHTML}`);
+}
+
+/**
  * @description Click event handler
  * @param {document#event:click} event
  * @listens document#click
  */
 function cardClickHandler(event) {
   if (isValidTarget(event.target) && isValidNumberOfClicks(selectedCards.length, MAX_NUMBER_OF_CLICKS)) {
+    if (!timerStatus) {
+      timerStatus = gameTimer(timerStatus);
+    }
+
     selectedCards.push(event.target);
     toggleClasses(event.target, 'open', 'show');
 
@@ -236,9 +262,16 @@ function cardClickHandler(event) {
         removeStar(stars, starRating);
       }
 
-      (isMatch(selectedCards)) ?
-        animateMatch(selectedCards) :
+      if (isMatch(selectedCards)) {
+        animateMatch(selectedCards);
+
+        if (isGameOver()) {
+          gameOver();
+        }
+
+      } else {
         animateMisMatch(selectedCards);
+      }
 
       setTimeout(() => {
         selectedCards.length = 0;
@@ -250,5 +283,3 @@ function cardClickHandler(event) {
 //shuffle(cards);
 deck.appendChild(setGameBoard(cards));
 deck.addEventListener('click', cardClickHandler);
-
-gameTimer(seconds, minutes);
