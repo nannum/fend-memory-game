@@ -264,6 +264,23 @@ function memoryGame() {
   }
 
   /**
+   * @description Resets the game
+   */
+  function restartGame() {
+    if (timer) {
+      stopTimer();
+      resetStars();
+      numberOfMoves = 0;
+      moves.innerHTML = 0;
+      minutes.innerHTML = '00';
+      seconds.innerHTML = '00';
+      clearGameBoard();
+      shuffle(cards);
+      setGameBoard(cards);
+    }
+  }
+
+  /**
    * @description Click event handler
    * @param {document#event:click} event
    * @listens document#click
@@ -306,5 +323,6 @@ function memoryGame() {
   shuffle(cards);
   setGameBoard(cards);
   deck.addEventListener('click', cardClickHandler);
+  restart.addEventListener('click', restartGame);
 }
 memoryGame();
