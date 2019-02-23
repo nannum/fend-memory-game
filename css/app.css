@@ -1,5 +1,6 @@
 html {
   box-sizing: border-box;
+  font: 100%;
 }
 
 *,
@@ -10,15 +11,16 @@ html {
 
 html,
 body {
-  width: 100%;
+  color: #2e3d49;
   height: 100%;
   margin: 0;
   padding: 0;
+  width: 100%;
 }
 
 body {
   background: #ffffff url('../img/geometry2.png');
-  font-family: 'Coda', cursive;
+  font-family: 'Lato', Calibri, Arial, sans-serif;
 }
 
 .container {
@@ -28,9 +30,28 @@ body {
   flex-direction: column;
 }
 
-h1 {
-  font-family: 'Open Sans', sans-serif;
+h1, h2 {
   font-weight: 300;
+  text-transform: uppercase;
+}
+
+button {
+  background: rgba(46, 61, 73, 1);
+	border: none;
+	border-radius: 2px;
+	color: #fff;
+	cursor: pointer;
+	display: inline-block;
+	font-size: 1em;
+	letter-spacing: 1px;
+  margin: 3px 2px;
+  outline: none;
+  padding: 0.6em 1.2em;
+	text-transform: uppercase;
+}
+
+button:hover {
+	background: rgba(46, 61, 73, 0.90);
 }
 
 /*
@@ -124,6 +145,103 @@ h1 {
 .score-panel .restart {
   float: right;
   cursor: pointer;
+}
+
+/*
+* Styles for the congratulations modal
+*/
+.modal {
+	height: auto;
+  left: 50%;
+	max-width: 630px;
+	min-width: 320px;
+	position: fixed;
+	top: 50%;
+	transform: translateX(-50%) translateY(-50%);
+	visibility: hidden;
+	width: 50%;
+	z-index: 2000;
+}
+
+.modal-show {
+	visibility: visible;
+}
+
+.modal-overlay {
+	background: #f9fafb;
+	height: 100%;
+	left: 0;
+	opacity: 0;
+	position: fixed;
+	top: 0;
+	transition: all 0.3s;
+	visibility: hidden;
+	width: 100%;
+	z-index: 1000;
+}
+
+.modal-show ~ .modal-overlay {
+	opacity: 1;
+	visibility: visible;
+}
+
+.modal-container {
+	position: relative;
+  margin: 0 auto;
+  opacity: 0;
+	transform: scale(0.8);
+	transition: all 0.3s;
+}
+
+.modal-title {
+  box-shadow: 0 1px 0 #2e3d49;
+  margin: 0 0 1em;
+	padding: 0.5em 0;
+	text-align: center;
+	font-size: 2em;
+}
+
+.modal-stats {
+  margin: 1em auto;
+  width: 160px;
+}
+
+.modal-stats-header {
+  text-transform: uppercase;
+  margin-right: 5px;
+}
+
+.modal-stats-star-rating,
+.modal-stats-stars {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+}
+
+.modal-stats-stars li {
+  display: inline-block;
+  list-style: none;
+}
+
+.modal-close {
+	display: block;
+	margin: 2em auto 0;
+}
+
+.modal-show .modal-container {
+	opacity: 1;
+	transform: scale(1);
+}
+
+.titanic {
+  height: 90px;
+  margin: 0 auto;
+  width: 90px;
+}
+
+.titanic path {
+  fill: #2e3d49;
+  stroke: #2e3d49;
 }
 
 /* animations from https://daneden.github.io/animate.css/ */

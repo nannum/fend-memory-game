@@ -6,7 +6,10 @@
     <meta name="description" content="Concentration clone - the classic card matching memory game ">
     <link rel="stylesheet prefetch" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
     <link rel="stylesheet prefetch" href="https://fonts.googleapis.com/css?family=Coda">
+    <link rel="stylesheet prefetch" href="https://fonts.googleapis.com/css?family=Lato:300,400,700">
     <link rel="stylesheet" href="css/app.css">
+    <script src="https://cdn.rawgit.com/icons8/titanic/master/dist/js/titanic.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/4.5.9/bodymovin.min.js"></script>
   </head>
   <body>
 
@@ -23,13 +26,12 @@
         </ul>
 
         <div class="move-counter">
-          <span class="moves">0</span> Moves
+          Moves: <span class="moves">0</span>
         </div>
 
         <div class="timer">
-          <span>Time</span>
-          <span class="minutes">00</span>
-          <span class="colon">:</span>
+          Time:
+          <span class="minutes">00</span> :
           <span class="seconds">00</span>
         </div>
 
@@ -42,6 +44,40 @@
       </ul>
     </div>
 
+    <section class="modal">
+      <div class="modal-container">
+        <div class='titanic titanic-star'></div>
+        <h2 class="modal-title">Congratulations,<br> You Won!</h2>
+
+        <div class="modal-stats">
+          <p class="modal-stats-star-rating">
+            <span class="modal-stats-header">Star Rating:</span>
+          </p>
+          <ul class="modal-stats-stars">
+          </ul>
+          <p>
+            <span class="modal-stats-header">Total Moves:</span>
+            <span class="modal-moves"></span>
+          </p>
+          <p>
+            <span class="modal-stats-header">Total Time:</span>
+            <span class="modal-minutes"></span> :
+            <span class="modal-seconds"></span>
+          </p>
+        </div>
+
+        <button class="modal-close">Play Again!</button>
+      </div>
+    </section>
+    <div class="modal-overlay"></div>
+
     <script src="js/app.js"></script>
+    <script>
+      var titanic = new Titanic('https://rawgit.com/icons8/titanic/master/src/icons/');
+      let myModal = document.querySelector('.modal-container');
+      myModal.addEventListener('transitionend', function(event) {
+        titanic.play("star");
+      });
+    </script>
   </body>
 </html>

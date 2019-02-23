@@ -36,6 +36,13 @@ function memoryGame() {
   let seconds = document.body.querySelector('.seconds');
   let restart = document.body.querySelector('.restart');
   let deck = document.body.querySelector('.deck');
+  let modal = document.querySelector('.modal');
+  let modalOverlay = document.querySelector('.modal-overlay');
+  let modalStars = document.querySelector('.modal-stats-stars');
+  let modalMoves = document.querySelector('.modal-moves');
+  let modalMinutes = document.querySelector('.modal-minutes');
+  let modalSeconds = document.querySelector('.modal-seconds');
+  let close = document.querySelector('.modal-close');
   let numberOfMoves = 0;
   let starRating = 0;
   let timer = null;
@@ -65,7 +72,7 @@ function memoryGame() {
   }
 
   /**
-   * @description Stats the game timer
+   * @description Starts the game timer
    * @returns {boolean}
    */
   function starTimer() {
@@ -83,14 +90,6 @@ function memoryGame() {
   function stopTimer() {
     clearInterval(timer);
     timer = null;
-  }
-
-  /**
-   * @description Clears the game time from the DOM
-   */
-  function clearTime() {
-    minutes.innerHTML = '00';
-    seconds.innerHTML = '00';
   }
 
   /**
@@ -125,11 +124,12 @@ function memoryGame() {
   }
 
   /**
-   * @description Clears the game board by removingh all the card elements from the DOM
+   * @description Removes all an element's children from the DOM
+   * @param {element} element - The DOM element from which the elemengts are removed
    */
-  function clearGameBoard() {
-    while (deck.firstChild) {
-      deck.removeChild(deck.firstChild);
+  function clearElement(element) {
+    while (element.firstChild) {
+      element.removeChild(element.firstChild);
     }
   }
 
@@ -217,9 +217,9 @@ function memoryGame() {
    * @returns {number} The current star rating
    */
   function getStarRating() {
-    return (numberOfMoves <= 11) ? 3
-      : (numberOfMoves > 11 && numberOfMoves <= 16) ? 2
-      : (numberOfMoves > 16 && numberOfMoves <= 20) ? 1
+    return (numberOfMoves <= 12) ? 3
+      : (numberOfMoves > 12 && numberOfMoves <= 18) ? 2
+      : (numberOfMoves > 18 && numberOfMoves <= 24) ? 1
       : 0;
   }
 
@@ -243,6 +243,23 @@ function memoryGame() {
   }
 
   /**
+   * @description Loads stars in the modal
+   */
+  function loadModalStars() {
+    let fragment = document.createDocumentFragment();
+
+    for (let i = 0; i < starRating; i++) {
+      let listElement = document.createElement('li');
+      let symbolElement = document.createElement('i');
+
+      symbolElement.setAttribute('class', 'fa fa-star');
+      listElement.appendChild(symbolElement);
+      fragment.appendChild(listElement);
+    }
+    modalStars.appendChild(fragment);
+  }
+
+  /**
    * @description Tests to see if the game is over
    * @returns {boolean}
    */
@@ -252,32 +269,52 @@ function memoryGame() {
   }
 
   /**
-   * @description Ends the game
-   */
-  function gameOver() {
-    stopTimer();
-    //launchModal(starRating);
-    console.log("congrats bitch!");
-    console.log(`here's the numberOfMoves cunt: ${numberOfMoves}`);
-    console.log(`here's the starRating hoe: ${starRating}`);
-    console.log(`here's the time bitch: ${minutes.innerHTML}:${seconds.innerHTML}`);
-  }
-
-  /**
    * @description Resets the game
    */
   function restartGame() {
-    if (timer) {
-      stopTimer();
-      resetStars();
-      numberOfMoves = 0;
-      moves.innerHTML = 0;
-      minutes.innerHTML = '00';
-      seconds.innerHTML = '00';
-      clearGameBoard();
-      shuffle(cards);
-      setGameBoard(cards);
-    }
+    stopTimer();
+    resetStars();
+    starRating = 0;
+    numberOfMoves = 0;
+    selectedCards.length = 0;
+    moves.innerHTML = 0;
+    minutes.innerHTML = '00';
+    seconds.innerHTML = '00';
+    modalMoves.innerHTML = 0;
+    modalMinutes.innerHTML = '00';
+    modalSeconds.innerHTML = '00';
+    clearElement(deck);
+    clearElement(modalStars);
+    shuffle(cards);
+    setGameBoard(cards);
+  }
+
+  /**
+   * @description Opens the end game modal
+   */
+  function openModal () {
+    modal.classList.add('modal-show');
+    modalOverlay.classList.add('modal-show');
+  }
+
+  /**
+   * @description Closes the end game modal
+   */
+  function closeModal () {
+    modal.classList.remove('modal-show');
+    restartGame();
+  }
+
+  /**
+   * @description Runs once the game is won
+   */
+  function gameOver() {
+    stopTimer();
+    modalMoves.innerHTML = moves.innerHTML;
+    modalMinutes.innerHTML = minutes.innerHTML;
+    modalSeconds.innerHTML = seconds.innerHTML;
+    loadModalStars();
+    openModal();
   }
 
   /**
@@ -324,5 +361,6 @@ function memoryGame() {
   setGameBoard(cards);
   deck.addEventListener('click', cardClickHandler);
   restart.addEventListener('click', restartGame);
+  close.addEventListener('click', closeModal);
 }
 memoryGame();
